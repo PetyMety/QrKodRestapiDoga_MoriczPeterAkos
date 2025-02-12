@@ -34,7 +34,7 @@ public class AddMovieActivity extends AppCompatActivity {
         baseUrl = getIntent().getStringExtra("BASE_URL");
         directorEditText = findViewById(R.id.directorEditText);
         durationEditText = findViewById(R.id.durationEditText);
-        categoryEditText = findViewById(R.id.categoryEditText)
+        categoryEditText = findViewById(R.id.categoryEditText);
         ratingEditText = findViewById(R.id.ratingEditText);
         yearEditText = findViewById(R.id.yearEditText);
         addButton = findViewById(R.id.addButton);
