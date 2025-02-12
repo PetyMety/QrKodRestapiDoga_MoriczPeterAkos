@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/activity_add_movie"
+    android:orientation="vertical"
+    android:gravity="left">
+
+    <EditText
+        android:id="@+id/directorEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Rendező neve" />
+
+    <EditText
+        android:id="@+id/durationEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Időtartam (perc)"
+        android:layout_below="@id/directorEditText" />
+
+    <EditText
+        android:id="@+id/ratingEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Értékelés"
+        android:layout_below="@id/durationEditText" />
+
+    <EditText
+        android:id="@+id/categoryEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Kategória"
+        android:layout_below="@id/ratingEditText"/>
+
+    <EditText
+        android:id="@+id/yearEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Megjelenési év"
+        android:layout_below="@id/categoryEditText"/>
+
+    <Button
+        android:id="@+id/addButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hozzáadás"
+        android:layout_below="@id/yearEditText"/>
+
+</RelativeLayout>
