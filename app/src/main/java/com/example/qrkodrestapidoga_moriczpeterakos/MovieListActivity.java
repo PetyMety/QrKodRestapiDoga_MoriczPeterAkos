@@ -1,6 +1,9 @@
 package com.example.qrkodrestapidoga_moriczpeterakos;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -30,6 +33,8 @@ public class MovieListActivity extends AppCompatActivity {
     private MovieAdapter movieAdapter;
     private String baseUrl;
 
+    private Button addMoviesButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,49 +49,66 @@ public class MovieListActivity extends AppCompatActivity {
         baseUrlTextView = findViewById(R.id.baseUrlTextView);
         fetchMoviesButton = findViewById(R.id.fetcMoviesButton);
         moviesListView = findViewById(R.id.moviesListView);
+        addMoviesButton = findViewById(R.id.addMoviesButton);
 
+        RetrofitService apiService = RetrofitClient.getInstance().create(RetrofitService.class);
         baseUrlTextView.setText(baseUrl);
         movieList = new ArrayList<>();
         movieAdapter = new MovieAdapter(this, movieList);
         moviesListView.setAdapter(movieAdapter);
 
-        fetchMoviesButton.setOnClickListener(view -> fetchMovies());
+        fetchMoviesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fetchMovies(apiService);
+            }
+        });
 
-        moviesListView.setOnClickListener((parent, view, position, id) -> {
-            deleteMovies(movieList.get(position).getId());
-            return true;
+        addMoviesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MovieListActivity.this, AddMovieActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        moviesListView.setOnItemClickListener((parent, view, position, id) -> {
+            deleteMovies(movieList.get(position).getId(), apiService);
         });
     }
 
-    private void fetchMovies() {
-        RetrofitService apiService = RetrofitClient.getInstance(baseUrl).create(RetrofitService.class);
-        apiService.getMovies(baseUrl).enqueue(new Callback<List<Movie>>() {
+    private void fetchMovies(RetrofitService apiService) {
+
+        apiService.getMovies().enqueue(new Callback<List<Movie>>() {
             @Override
             public void onResponse(Call<List<Movie>> call, Response<List<Movie>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     movieList.clear();
-                    for (Movie movie : response.body()) {
-                        if (movie.getRating() >= 4) {
+                    for(Movie movie : response.body()){
+                        if(movie.getRating()>=4){
                             movieList.add(movie);
                         }
                     }
                     movieAdapter.notifyDataSetChanged();
+                } else {
+                    Toast.makeText(MovieListActivity.this, "Nem sikerült betölteni a filmlistát", Toast.LENGTH_SHORT).show();
                 }
             }
             @Override
             public void onFailure(Call<List<Movie>> call, Throwable t) {
+                Log.e("MovieListActivity", "Hiba történt a filmek lekérdezésekor: " + t.getMessage());
                 Toast.makeText(MovieListActivity.this, "Hiba történt a filmek lekérdezésekor!", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void deleteMovies(int movieId) {
-        RetrofitService apiService = RetrofitClient.getInstance(baseUrl).create(RetrofitService.class);
+    private void deleteMovies(int movieId, RetrofitService apiService) {
+
         apiService.deleteMovie(movieId).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
-                    fetchMovies();
+                    fetchMovies(apiService);
                 }
             }
             @Override

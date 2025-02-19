@@ -12,12 +12,12 @@ import retrofit2.http.Query;
 
 public interface RetrofitService {
 
-    @GET("movies")
-    Call<List<Movie>> getMovies(@Query("baseUrl") String baseUrl);
+    @GET("/9sz8pG/movie")
+    Call<List<Movie>> getMovies();
 
-    @DELETE("movies/{id}")
+    @DELETE("/9sz8pG/movie/{id}")
     Call<Void> deleteMovie(@Path("id") int id);
 
-    @POST("movies")
+    @POST("/9sz8pG/movie")
     Call<Movie> addMovie(@Body Movie movie);
 }

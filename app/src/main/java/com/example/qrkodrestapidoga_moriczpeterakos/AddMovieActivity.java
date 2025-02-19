@@ -1,6 +1,7 @@
 package com.example.qrkodrestapidoga_moriczpeterakos;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -19,7 +20,6 @@ import retrofit2.Response;
 public class AddMovieActivity extends AppCompatActivity {
     private EditText directorEditText, durationEditText, ratingEditText, categoryEditText, yearEditText;
     private Button addButton;
-    private String baseUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +30,7 @@ public class AddMovieActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
-        baseUrl = getIntent().getStringExtra("BASE_URL");
+        RetrofitService apiService = RetrofitClient.getInstance().create(RetrofitService.class);
         directorEditText = findViewById(R.id.directorEditText);
         durationEditText = findViewById(R.id.durationEditText);
         categoryEditText = findViewById(R.id.categoryEditText);
@@ -39,11 +38,16 @@ public class AddMovieActivity extends AppCompatActivity {
         yearEditText = findViewById(R.id.yearEditText);
         addButton = findViewById(R.id.addButton);
 
-        addButton.setOnClickListener(view -> addMovie());
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addMovie(apiService);
+            }
+        });
 
     }
 
-    private void addMovie() {
+    private void addMovie(RetrofitService apiService) {
         String director = directorEditText.getText().toString();
         int duration = Integer.parseInt(durationEditText.getText().toString());
         float rating = Float.parseFloat(ratingEditText.getText().toString());
@@ -51,7 +55,7 @@ public class AddMovieActivity extends AppCompatActivity {
         int year = Integer.parseInt(yearEditText.getText().toString());
 
         Movie newMovie = new Movie(director, duration, rating, category, year);
-        RetrofitService apiService = RetrofitClient.getInstance(baseUrl).create(RetrofitService.class);
+
         apiService.addMovie(newMovie).enqueue(new Callback<Movie>() {
             @Override
             public void onResponse(Call<Movie> call, Response<Movie> response) {
