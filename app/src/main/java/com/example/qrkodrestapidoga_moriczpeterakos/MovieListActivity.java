@@ -72,8 +72,9 @@ public class MovieListActivity extends AppCompatActivity {
             }
         });
 
-        moviesListView.setOnItemClickListener((parent, view, position, id) -> {
+        moviesListView.setOnItemLongClickListener((parent, view, position, id) -> {
             deleteMovies(movieList.get(position).getId(), apiService);
+            return true;
         });
     }
 
