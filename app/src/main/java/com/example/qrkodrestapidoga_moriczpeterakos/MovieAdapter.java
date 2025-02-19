@@ -40,4 +40,10 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
         return convertView;
     }
 
+    private String formatDuration(int duration){
+        int hours = duration / 60;
+        int minutes =duration % 60;
+        return hours + " óra " + minutes + " perc ";
+    }
+
 }

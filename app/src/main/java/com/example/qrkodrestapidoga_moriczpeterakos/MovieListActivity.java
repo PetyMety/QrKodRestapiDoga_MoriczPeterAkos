@@ -60,12 +60,12 @@ public class MovieListActivity extends AppCompatActivity {
 
     private void fetchMovies() {
         RetrofitService apiService = RetrofitClient.getInstance(baseUrl).create(RetrofitService.class);
-        apiService.getMovies().enqueue(new Callback<List<Movie>>() {
+        apiService.getMovies(baseUrl).enqueue(new Callback<List<Movie>>() {
             @Override
             public void onResponse(Call<List<Movie>> call, Response<List<Movie>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     movieList.clear();
-                    for (Movie movie : Response.body()) {
+                    for (Movie movie : response.body()) {
                         if (movie.getRating() >= 4) {
                             movieList.add(movie);
                         }
